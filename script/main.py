@@ -44,6 +44,20 @@ def salvar_csv(tabelas_renomeadas, diretorio_saida = "data/saida"):
         return [caminho_unico]
     return []
 
+def compactacao_pdf(arquivo_csv, pasta_zip="data/saida/Teste_Emmilly_Gomes.zip"):
+    if not arquivo_csv:
+        print("Nenhum arquivo para compactar")
+        return
+     
+    try:
+        os.makedirs(os.path.dirname(pasta_zip), exist_ok=True)
+        with ZipFile(pasta_zip, 'w') as zipf:
+            for csv in arquivo_csv:
+                zipf.write(csv, os.path.basename(csv))
+        print(f"Arquivo compactado: {pasta_zip}")
+    except Exception as e:
+        print(f"Erro ao compactar os arquivos: {e}")
+
 def main():
     pdf_path = os.path.join(os.getcwd(), "data", "entrada", "Anexo_I.pdf")
 
@@ -52,8 +66,8 @@ def main():
     }
 
     tabelas_renomeadas = extrair_e_renomear(pdf_path, renomear)
-    salvar_csv(tabelas_renomeadas)
-  
+    arquivo_csv = salvar_csv(tabelas_renomeadas)
+    compactacao_pdf(arquivo_csv)
 
 if __name__ == "__main__":
     main()
